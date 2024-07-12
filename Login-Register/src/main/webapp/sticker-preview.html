@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sticker Preview</title>
+    <style>
+      /* CSS styles for the page */
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+        background-color: #2e3884; /* Light gray background color */
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .page-container {
+        background-color: #ffffff; /* White background for the page content */
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle effect */
+        border-radius: 10px; /* Rounded corners for the page container */
+        max-width: 90%; /* Limit width to 90% of viewport */
+      }
+      .preview-container {
+        position: relative;
+        display: inline-block;
+        max-width: 100%;
+        margin-bottom: 20px;
+        overflow: hidden; /* Ensure content doesn't overflow */
+      }
+      .movie-poster {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .comment-container {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+        background-color: rgba(
+          0,
+          0,
+          0,
+          0.7
+        ); /* Dark semi-transparent background */
+        color: white;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      .comment {
+        font-size: 18px;
+        font-weight: bold;
+        white-space: pre-line;
+      }
+
+      /* Interactive color selection dropdown */
+      label[for="colorPicker"] {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+      }
+      #colorPicker {
+        padding: 5px;
+        font-size: 16px;
+        border-radius: 5px;
+      }
+
+      /* Font size adjustment */
+      label[for="fontSize"] {
+        margin-top: 10px;
+        display: block;
+        font-weight: bold;
+      }
+      #fontSize {
+        width: 100%;
+        margin-top: 5px;
+      }
+
+      /* Share button */
+      button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #2196f3; /* Blue color for share button */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #0b7dda; /* Darker blue color on hover */
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .page-container {
+          padding: 10px;
+        }
+        .movie-poster {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-container">
+      <header>
+        <h2>Sticker Preview</h2>
+      </header>
+      <div class="preview-container">
+        <img src="" alt="Movie Poster" class="movie-poster" />
+        <div class="comment-container">
+          <div id="comment" class="comment"></div>
+        </div>
+      </div>
+
+      <!-- Interactive color selection dropdown -->
+      <label for="colorPicker">Choose background color:</label>
+      <select id="colorPicker">
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+        <option value="black">Black</option>
+        <option value="yellow">Yellow</option>
+        <option value="orange">Orange</option>
+      </select>
+
+      <!-- Font size adjustment input -->
+      <label for="fontSize">Adjust font size:</label>
+      <input type="range" id="fontSize" min="12" max="24" value="18" step="1" />
+
+      <!-- Share button -->
+      <button onclick="shareSticker()">Share</button>
+    </div>
+
+    <script>
+      // JavaScript code to handle dynamic content
+      const urlParams = new URLSearchParams(window.location.search);
+      const comment = urlParams.get("comment");
+      const color = urlParams.get("color");
+      const movieId = urlParams.get("movieId");
+
+      // Check if required parameters exist, otherwise show an error message or redirect
+      if (!comment || !color || !urlParams.get("poster_path")) {
+        console.error("Missing required parameters.");
+        // Example: Redirect to an error page
+        window.location.href = "error.html";
+      }
+
+      // Set the movie poster image dynamically
+      const img = document.querySelector(".movie-poster");
+      img.src = `https://image.tmdb.org/t/p/w500/${urlParams.get(
+        "poster_path"
+      )}`;
+      img.alt = "Movie Poster"; // Alt attribute for accessibility
+
+      // Set the comment text and style
+      const commentEl = document.getElementById("comment");
+      commentEl.innerText = comment;
+
+      // Apply background color based on the color parameter
+      const commentContainer = document.querySelector(".comment-container");
+      commentContainer.style.backgroundColor = getColor(color);
+
+      // Event listener for color selection dropdown
+      const colorPicker = document.getElementById("colorPicker");
+      colorPicker.addEventListener("change", function () {
+        const selectedColor = colorPicker.value;
+        commentContainer.style.backgroundColor = getColor(selectedColor);
+      });
+
+      // Event listener for font size adjustment
+      const fontSizeInput = document.getElementById("fontSize");
+      fontSizeInput.addEventListener("input", function () {
+        const fontSize = `${fontSizeInput.value}px`;
+        commentEl.style.fontSize = fontSize;
+      });
+
+      // Function to share the sticker
+      function shareSticker() {
+        const comment = encodeURIComponent(urlParams.get("comment"));
+        const moviePoster = `https://image.tmdb.org/t/p/w500/${urlParams.get(
+          "poster_path"
+        )}`;
+
+        const shareData = {
+          title: "Sticker Preview",
+          text: comment,
+          url: moviePoster,
+        };
+
+        // Use the Web Share API if available
+        if (navigator.share) {
+          navigator
+            .share(shareData)
+            .then(() => console.log("Shared successfully"))
+            .catch((error) => console.error("Error sharing:", error));
+        } else {
+          // Fallback for browsers that do not support Web Share API
+          const shareUrl = `mailto:?subject=Sticker%20Preview&body=${comment}%0A%0A${moviePoster}`;
+          window.location.href = shareUrl;
+        }
+      }
+
+      // Function to get RGBA color based on color name
+      function getColor(color) {
+        switch (color) {
+          case "red":
+            return "rgba(255, 0, 0, 0.7)";
+          case "blue":
+            return "rgba(0, 0, 255, 0.7)";
+          case "green":
+            return "rgba(0, 128, 0, 0.7)";
+          case "black":
+            return "rgba(0, 0, 0, 0.7)";
+          case "yellow":
+            return "rgba(255, 255, 0, 0.7)";
+          case "orange":
+            return "rgba(255, 165, 0, 0.7)";
+          default:
+            return "rgba(0, 0, 0, 0.7)";
+        }
+      }
+    </script>
+  </body>
+</html>
