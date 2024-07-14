@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <h1 id="uid">Welcome To <span class="highlight">MOVIE HUB</span>!</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="welcome.html" class="nav-link">Home</a>
+                <a href="register.jsp" class="nav-link">Add Account</a>
+            </nav>
+            <form id="form" role="search" class="search-form">
+                <input type="text" id="search" class="search" placeholder="Search for movies" aria-label="Search for movies">
+                <button type="submit" class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px">
+                        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.89-5-5.74-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.85 2.56 5.27 5.34 5.74a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <div id="tags"></div>
+
+    <div id="myNav" class="overlay" aria-hidden="true">
+        <!-- Overlay content -->
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" aria-label="Close overlay">&times;</a>
+        <div class="overlay-content" id="overlay-content"></div>
+        <a href="javascript:void(0)" class="arrow left-arrow" id="left-arrow" aria-label="Previous">&#8656;</a>
+        <a href="javascript:void(0)" class="arrow right-arrow" id="right-arrow" aria-label="Next">&#8658;</a>
+    </div>
+
+    <main id="main"></main>
+
+    <div class="pagination">
+        <div class="page" id="prev" role="button" aria-label="Previous Page" tabindex="0">Previous Page</div>
+        <div class="current" id="current">1</div>
+        <div class="page" id="next" role="button" aria-label="Next Page" tabindex="0">Next Page</div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-info">
+                <h3>About Movie App</h3>
+                <p>Discover and explore a vast collection of movies. Stay updated with the latest releases, reviews and create movie stickers.</p>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2024 Movie HUB. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
